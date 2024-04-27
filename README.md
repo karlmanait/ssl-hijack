@@ -48,3 +48,23 @@ kubectl apply -f spoofsite/ingress.yaml
 Make sure to update the hosts file with the external IP assigned to the ingress controller service.
 * Linux - `/etc/hosts`
 * Windows - `C:\Windows\System32\drivers\etc\hosts`
+
+### Generate SSL certificate and create secret
+1. Create SSL certificate
+```
+openssl req -x509 -newkey rsa:4096 -sha256 -nodes \
+  -keyout tls.key -out tls.crt \
+  -subj "/CN=example.com" -days 365
+```
+2. Create k8s secret based on SSL certificate
+```
+kubectl create secret tls demo-tls --cert=tls.crt --key=tls.key
+```
+
+### Accept self-signed certificate in the browser
+When accessing the site for the first time, you may encounter a warning about the risk associated
+with the self-signed certificate. To proceed, simply accept the risk and continue.
+This action will add the certificate as an exception in your browser settings.
+
+If the browser redirects you to the original site, clear the DNS cache records in both your browser
+and the machine you're using or use "Private/Incognito Mode".
