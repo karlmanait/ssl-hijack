@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver-deploy
+spec:
+  selector:
+    matchLabels:
+      app: webserver
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: webserver
+    spec:
+      containers:
+        - name: webserver
+          image: nginx:1.25.5
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/
+              name: src
+      volumes:
+        - name: src
+          hostPath:
+            type: Directory
+            path: /home/karl/ssl-hijack/spoofsite/html

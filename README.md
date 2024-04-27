@@ -21,17 +21,30 @@ helm upgrade --install ingress-nginx ingress-nginx \
 
 2. On an on-premise cluster lacking a network load balancer, MetalLB needs to be deployed and the
 IP address pool configured.
-  2.1 Install metallb
-  ```
-  helm upgrade --install metallb metallb \
-    --repo https://metallb.github.io/metallb \
-    --namespace metallb --create-namespace
-  ```
-  2.2 Once metallb-controller pod is ready, configure metallb IP address pool
-  ```
-  kubectl apply -f metallb-crd/ipaddresspool.yaml
-  ```
-  2.3 Verify the external IP of the ingress controller LoadBalancer service
-  ```
-  kubectl -n ingress-nginx get svc
-  ```
+
+    2.1. Install metallb
+    ```
+    helm upgrade --install metallb metallb \
+      --repo https://metallb.github.io/metallb \
+      --namespace metallb --create-namespace
+    ```
+    2.2. Once metallb-controller pod is ready, configure metallb IP address pool
+    ```
+    kubectl apply -f metallb-crd/ipaddresspool.yaml
+    ```
+    2.3. Verify the external IP of the ingress controller LoadBalancer service
+    ```
+    kubectl -n ingress-nginx get svc
+    ```
+
+### Deploy spoofsite service locally
+```
+kubectl apply -f spoofsite/service.yaml
+kubectl apply -f spoofsite/deployment.yaml
+kubectl apply -f spoofsite/ingress.yaml
+```
+
+### Override DNS resolution
+Make sure to update the hosts file with the external IP assigned to the ingress controller service.
+* Linux - `/etc/hosts`
+* Windows - `C:\Windows\System32\drivers\etc\hosts`
